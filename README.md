@@ -1,7 +1,7 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
-** Get previous task**
+### Get previous task
 
 ```
 def previousTask(task):
@@ -15,7 +15,7 @@ print task.title
 print "previous task is: " + str(previousTask(task).title)
 ```
 
-** Get Gated tasks before a task**
+### Get Gated tasks before a task
 
 ```
 def gatesBeforeTask(task):
@@ -32,7 +32,7 @@ for item in gatesBeforeTask(task):
   print item.title
 ```
 
-**Find a task by title**
+### Find a task by title
 
 ```
 def findTaskByTitle(title):
