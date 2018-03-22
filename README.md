@@ -77,8 +77,11 @@ for r in rvar:
     print r._delegate.key
     print r._delegate.value
 
-Update automated task server entry
+```
 
+### Update automated task server entry
+
+```
 t = taskApi.searchTasksByTitle("buildjar","Build",release.id)[0]
 jenkinslist = configurationApi.searchByTypeAndTitle("jenkins.Server",releaseVariables['jenkinsserver'])
 t.pythonScript.jenkinsServer = jenkinslist[0]
