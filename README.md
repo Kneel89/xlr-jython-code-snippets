@@ -69,7 +69,7 @@ for phase in release.json()['phases']:
 ```
 
 
-###fetch variables from another release
+### Fetch variables from another release
 
 ```
 rvar = releaseApi.getVariables(releaseVariables['myrel'])
@@ -85,7 +85,7 @@ t.pythonScript.jenkinsServer = jenkinslist[0]
 taskApi.updateTask(t)
 ```
 
-###Fetch URL for selected server in a automated task
+### Fetch URL for selected server in a automated task
 
 ```
 t = taskApi.searchTasksByTitle("buildjar","Build",release.id)
@@ -93,7 +93,7 @@ jenkinsUrl = t[0].pythonScript.jenkinsServer.url
 releaseVariables['jarurl'] = "%s/job/buildjar/%s/artifact/abc.jar" % (jenkinsUrl, releaseVariables['buildjarbn'])
 ```
 
-###create table/fancy markdown in a task description
+### Create table/fancy markdown in a task description
 
 ```
 a = [1,2,3,4,5,6]
@@ -105,7 +105,7 @@ taskApi.updateTask(task)
 ```
 
 
-##xlrelease add dynamic tags
+## Xlrelease add dynamic tags
 
 ```
 release.tags.add('abc')
@@ -114,7 +114,7 @@ releaseApi.updateRelease(release)
 
 
 
-###print classpath 
+### Print classpath 
 
 ```
 from java.lang import ClassLoader
