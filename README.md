@@ -106,6 +106,9 @@ for item in a:
 task.description = out
 taskApi.updateTask(task)
 ```
+#### Image
+![images/tableintaskdescription.png](images/tableintaskdescription.png)
+
 
 
 ## Xlrelease add dynamic tags
