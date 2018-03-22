@@ -67,3 +67,60 @@ for phase in release.json()['phases']:
             r = requests.put('http://admin:xlradmin@localhost:5516/gates/conditions/' + condition['id'], json=condition)
             print r.status_code	
 ```
+
+
+###fetch variables from another release
+
+```
+rvar = releaseApi.getVariables(releaseVariables['myrel'])
+for r in rvar: 
+    print r._delegate.key
+    print r._delegate.value
+
+Update automated task server entry
+
+t = taskApi.searchTasksByTitle("buildjar","Build",release.id)[0]
+jenkinslist = configurationApi.searchByTypeAndTitle("jenkins.Server",releaseVariables['jenkinsserver'])
+t.pythonScript.jenkinsServer = jenkinslist[0]
+taskApi.updateTask(t)
+```
+
+###Fetch URL for selected server in a automated task
+
+```
+t = taskApi.searchTasksByTitle("buildjar","Build",release.id)
+jenkinsUrl = t[0].pythonScript.jenkinsServer.url
+releaseVariables['jarurl'] = "%s/job/buildjar/%s/artifact/abc.jar" % (jenkinsUrl, releaseVariables['buildjarbn'])
+```
+
+###create table/fancy markdown in a task description
+
+```
+a = [1,2,3,4,5,6]
+out=  "|Heading \n |---\n"
+for item in a:
+    out= "{0}|{1}\n".format(out,item)
+task.description = out
+taskApi.updateTask(task)
+```
+
+
+##xlrelease add dynamic tags
+
+```
+release.tags.add('abc')
+releaseApi.updateRelease(release)
+```
+
+
+
+###print classpath 
+
+```
+from java.lang import ClassLoader
+cl = ClassLoader.getSystemClassLoader()
+paths = map(lambda url: url.getFile(), cl.getURLs())
+print paths
+```
+
+
