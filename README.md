@@ -120,7 +120,7 @@ releaseApi.updateRelease(release)
 
 
 
-### Print classpath 
+## Print classpath 
 
 ```
 from java.lang import ClassLoader
@@ -129,4 +129,22 @@ paths = map(lambda url: url.getFile(), cl.getURLs())
 print paths
 ```
 
+## Add a folder
 
+```
+from com.xebialabs.xlrelease.domain.folder import Folder
+newFolder = Folder()
+newFolder.title="MyFolder"
+folderApi.addFolder("Applications",newFolder)
+```
+
+## Copy a template
+
+```
+templates = folderApi.getTemplates("Applications")
+# Pick the first template 
+template = templates[0]
+# Give it a new title
+template.title = "new template"
+templateApi.createTemplate(template)
+```
