@@ -148,3 +148,85 @@ template = templates[0]
 template.title = "new template"
 templateApi.createTemplate(template)
 ```
+
+## Generate a release pipeline dynamically with parallel group and tasks from a provided dataset
+
+```
+import json
+# Here the dataset. This can come from any medium and then captured into a variable and worked upon. For sake of simplicity, the data sample in included here
+datamap = '''[
+	{
+		"name": "libs",
+		"entries": [
+			{
+				"name": "lib1",
+				"skip": "false"
+			},
+			{
+				"name": "lib2",
+				"skip": "false"
+			},
+			{
+				"name": "lib3",
+				"skip": "true"
+			}
+		],
+		"execution": "sequence"
+	},
+	{
+		"name": "messages",
+		"entries": [
+			{
+				"name": "msg1",
+				"skip": "false"
+			},
+			{
+				"name": "msg2",
+				"skip": "true"
+			},
+			{
+				"name": "msg3",
+				"skip": "false"
+			}
+		],
+		"execution": "parallel"
+	},
+	{
+		"name": "services",
+		"entries": [
+			{
+				"name": "service1",
+				"skip": "false"
+			},
+			{
+				"name": "service2",
+				"skip": "false"
+			}
+		],
+		"execution": "parallel"
+	}
+]
+'''
+dataobj = json.loads(datamap)
+
+# Iterate on the data set
+# * Create phases for the names
+# * Create a parallel group if the sequence entry is parallel
+# * Create the tasks under the parallel group or directly under the phase
+# * Create a precondition to skip if mentioned
+
+for item in dataobj:
+    phase = phaseApi.newPhase(item['name'])
+    phase = phaseApi.addPhase(release.id, phase)
+    if str(item['execution']) == "parallel":
+        pgrouptask = taskApi.newTask("xlrelease.ParallelGroup")
+        pgrouptask.title = "Parallel Run"
+        phase = taskApi.addTask(phase.id, pgrouptask)
+    for entry in item['entries']:
+        task = taskApi.newTask("vsts.QueueBuild")
+        task.title = entry['name']
+        if entry['skip'] == "true":
+            task.precondition = "True == False"
+        taskApi.addTask(phase.id, task)
+
+```
