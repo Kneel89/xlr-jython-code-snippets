@@ -218,12 +218,14 @@ for item in dataobj:
         pgrouptask.title = "Parallel Run"
         phase = taskApi.addTask(phase.id, pgrouptask)
     for entry in item['entries']:
-        task = taskApi.newTask("vsts.QueueBuildWithParams")
+        task = taskApi.newTask("vsts.QueueBuild")
         task.title = entry['name']
-        task.teamProjectName = teamProjectName
-        task.buildDefinitionName = buildDefinitionName
-        task.parameters = "{'component_id':'%s'}" % entry['name']
+
+        task.pythonScript.setProperty("teamProjectName", teamProjectName)
+        task.pythonScript.setProperty("buildDefinitionName", buildDefinitionName)
+        
         if entry['skip'] == "true":
             task.precondition = "True == False"
         taskApi.addTask(phase.id, task)
-```
+        
+ ```
