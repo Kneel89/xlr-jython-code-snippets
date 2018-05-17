@@ -153,21 +153,22 @@ templateApi.createTemplate(template)
 
 ```
 import json
-# Here the dataset. This can come from any medium and then captured into a variable and worked upon. For sake of simplicity, the data sample in included here
+teamProjectName = "MyProject"
+buildDefinitionName = "mybuildDef"
 datamap = '''[
 	{
 		"name": "libs",
 		"entries": [
 			{
-				"name": "lib1",
+				"name": "a-library",
 				"skip": "false"
 			},
 			{
-				"name": "lib2",
+				"name": "b-library",
 				"skip": "false"
 			},
 			{
-				"name": "lib3",
+				"name": "c-library",
 				"skip": "true"
 			}
 		],
@@ -177,15 +178,15 @@ datamap = '''[
 		"name": "messages",
 		"entries": [
 			{
-				"name": "msg1",
+				"name": "a-messages",
 				"skip": "false"
 			},
 			{
-				"name": "msg2",
+				"name": "b-messages",
 				"skip": "true"
 			},
 			{
-				"name": "msg3",
+				"name": "c-messages",
 				"skip": "false"
 			}
 		],
@@ -195,11 +196,11 @@ datamap = '''[
 		"name": "services",
 		"entries": [
 			{
-				"name": "service1",
+				"name": "a-service",
 				"skip": "false"
 			},
 			{
-				"name": "service2",
+				"name": "b-service",
 				"skip": "false"
 			}
 		],
@@ -209,12 +210,6 @@ datamap = '''[
 '''
 dataobj = json.loads(datamap)
 
-# Iterate on the data set
-# * Create phases for the names
-# * Create a parallel group if the sequence entry is parallel
-# * Create the tasks under the parallel group or directly under the phase
-# * Create a precondition to skip if mentioned
-
 for item in dataobj:
     phase = phaseApi.newPhase(item['name'])
     phase = phaseApi.addPhase(release.id, phase)
@@ -223,10 +218,12 @@ for item in dataobj:
         pgrouptask.title = "Parallel Run"
         phase = taskApi.addTask(phase.id, pgrouptask)
     for entry in item['entries']:
-        task = taskApi.newTask("vsts.QueueBuild")
+        task = taskApi.newTask("vsts.QueueBuildWithParams")
         task.title = entry['name']
+        task.teamProjectName = teamProjectName
+        task.buildDefinitionName = buildDefinitionName
+        task.parameters = "{'component_id':'%s'}" % entry['name']
         if entry['skip'] == "true":
             task.precondition = "True == False"
         taskApi.addTask(phase.id, task)
-
 ```
