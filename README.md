@@ -229,3 +229,18 @@ for item in dataobj:
         taskApi.addTask(phase.id, task)
         
  ```
+
+## Add a Custom task (MyCustomTask.TestMapOutPut) in curent running Release and set a Key-Value (dicoPackageMap) in output property (MapOut)
+
+```
+curRelease = getCurrentRelease()
+curPhase = getCurrentPhase().title
+task = taskApi.newTask("MyCustomTask.TestMapOutPut")
+task.title = "ScriptCreated"
+task.variableMapping = {"pythonScript.MapOut" : "$""{dicoPackageMap}"}
+createdTask=taskApi.addTask(getCurrentPhase().id, task)
+taskApi.assignTask(createdTask.id,"Admin")
+
+```
+
+
