@@ -243,4 +243,21 @@ taskApi.assignTask(createdTask.id,"Admin")
 
 ```
 
+## Adding Date, working with Date
 
+```
+from java.util import Calendar, Date
+cal = Calendar.getInstance()
+cal.setTime(Date())
+cal.add(Calendar.DAY_OF_WEEK, 7)
+print cal.getTime()
+
+```
+
+## Add a Task as the next Task by copying a previous Task
+
+```
+t = getTasksByTitle("t1", "New Phase")[0]
+newt = taskApi.addTask(phase.id, t)
+
+```
