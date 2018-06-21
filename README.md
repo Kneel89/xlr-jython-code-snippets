@@ -267,7 +267,6 @@ newtask = taskApi.copyTask(t.id, phase.id, len(phase.getTasks()))
 
 ```
 from java.util import Calendar, Date
-import time
 cal = Calendar.getInstance()
 cal.setTime(getCurrentTask().startDate)
 cal.add(Calendar.DAY_OF_WEEK, 2)
