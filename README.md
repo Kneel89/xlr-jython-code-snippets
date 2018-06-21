@@ -254,10 +254,27 @@ print cal.getTime()
 
 ```
 
-## Add a Task as the next Task by copying a previous Task
+## Add a Task as the last Task in phase by copying a previous Task
 
 ```
 t = getTasksByTitle("t1", "New Phase")[0]
-newt = taskApi.addTask(phase.id, t)
+newtask = taskApi.copyTask(t.id, phase.id, len(phase.getTasks()))
+
 
 ```
+
+## Scheduling a task dynamically
+
+```
+from java.util import Calendar, Date
+import time
+cal = Calendar.getInstance()
+cal.setTime(getCurrentTask().startDate)
+cal.add(Calendar.DAY_OF_WEEK, 2)
+# getting a task that is ahead of current task in the flow
+t = getTasksByTitle("t1", "New Phase")[0]
+t.setScheduledStartDate(cal.getTime()) 
+taskApi.updateTask(t)
+
+```
+
