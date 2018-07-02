@@ -1,6 +1,16 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
+### Set the release title using release variables
+
+```
+#use the 'component' and 'version' release varible as title 
+title = "{component}/{version}".format(**releaseVariables)
+print(title)
+release.title = title
+releaseApi.updateRelease(release)
+```
+
 ### Get previous task
 
 ```
