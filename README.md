@@ -287,3 +287,61 @@ taskApi.updateTask(t)
 
 ```
 
+## Create a Self Scheduling Task Block - Style 1
+This example makes use of a Sequential Group. You can have any number of tasks within the sequential group but the last task should be a Jython Script/Custom Task with the following Script.  The script will replicate its parent Sequential Group and then reschedule the newly cloned group for a certain datetime
+
+```
+parenttask = getCurrentTask().container
+# find the sequential group child
+sequentialGroupId = None
+activetask = None
+# Iterating on the children to find SequentialGroup ID and the last active manual task ID
+for child in parenttask.getChildren():
+if str(child.type).lower() == "xlrelease.SequentialGroup".lower():
+    sequentialGroupId = child.id
+if str(child.type).lower() == "xlrelease.Task".lower() and str(child.status).lower() == "IN_PROGRESS".lower():
+    activetask = child.id
+
+# Setting up a notification task
+notfication = taskApi.newTask("xlrelease.NotificationTask")
+notfication.subject = "Sending Notification at %s" % datetime.today()
+notfication.addresses = Set(["a@gmail.com", "b@gmail.com"])
+notfication.body = "hi Hello"
+taskApi.addTask(sequentialGroupId, notfication)
+
+# Setting up a manual task
+manualtask = taskApi.newTask("xlrelease.Task")
+manualtask.title = "Waiting for Activity on %s" % ( datetime.today() + timedelta(days=1) )
+taskApi.addTask(sequentialGroupId, manualtask)
+
+# assigning it to the admin user to mark it complete in the next step
+taskApi.assignTask(activetask,"admin")
+taskApi.completeTask(activetask,Comment())
+
+```
+
+## Create a Self Scheduling Task Block - Style 2 ( Better )
+
+```
+from java.util import Calendar, Date
+import time
+
+# Get the parent block for current script task
+parenttask = getCurrentTask().container
+
+# Use calendar to increment the time
+cal = Calendar.getInstance()
+cal.setTime(parenttask.startDate)
+cal.add(Calendar.DAY_OF_WEEK, 2)
+
+# Create a new task from that parenttask as the next task 
+newtask = taskApi.copyTask(parenttask.id, phase.id, len(phase.getTasks()))
+
+# Set the newtask to the new time and title
+newtask.setScheduledStartDate(cal.getTime()) 
+newtask.title = parenttask.title
+
+# Update the new task
+taskApi.updateTask(newtask)
+
+```
