@@ -345,3 +345,29 @@ newtask.title = parenttask.title
 taskApi.updateTask(newtask)
 
 ```
+
+## Create/Populate a List Variable using Jython
+There are different interpreted types for different type of variables within the api. Usual way of knowing the right name is eg.
+If variable type is **StringVariable**, then xlr type is **xlrelease.StringVariable**
+
+Some variable types are 
+* StringVariable
+* ListStringVariable
+* MapStringStringVariable
+* PasswordStringVariable
+* SetStringVariable
+
+```
+from com.xebialabs.xlrelease.api.v1.forms import Variable  
+mylist = [1,2,3,4]
+listvar = Variable()
+listvar.value = mylist
+listvar.key = "mylistvar"
+listvar.type = "xlrelease.ListStringVariable"
+releaseApi.createVariable(release.id,listvar )
+
+```
+
+
+
+
