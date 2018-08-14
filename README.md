@@ -82,7 +82,7 @@ for phase in release.json()['phases']:
 ### Fetch variables from another release
 
 ```
-rvar = releaseApi.getVariables(releaseVariables['myrel'])
+rvar = releaseApi.getVariables(releaseidvar)
 for r in rvar: 
     print r._delegate.key
     print r._delegate.value
