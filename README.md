@@ -84,8 +84,14 @@ for phase in release.json()['phases']:
 ```
 rvar = releaseApi.getVariables(releaseidvar)
 for r in rvar: 
-    print r._delegate.key
-    print r._delegate.value
+    print "key:%s , value:%s \n" % (r._delegate.key,r._delegate.value)
+```
+or
+
+```
+myRelease = getCurrentRelease()
+for r in myRelease.variables: 
+   print "key:%s , value:%s \n" % (r.key, r.value)
 
 ```
 
