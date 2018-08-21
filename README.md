@@ -1,9 +1,11 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
-### Skip the current task (Uses OnFailureHandler (8.1+)
+### Skip the current task (Uses OnFailureHandler (8.1+))
 
 ```
+from com.xebialabs.xlrelease.domain.recover import TaskRecoverOp
+
 task.setTaskFailureHandlerEnabled(True)
 task.setTaskRecoverOp(TaskRecoverOp.SKIP_TASK)
 taskApi.updateTask(task)
