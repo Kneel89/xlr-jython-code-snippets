@@ -385,6 +385,26 @@ releaseApi.createVariable(release.id,listvar )
 
 ```
 
+## And Listboxes?
+These are slightly different, the variable itself can be a **StringVariable** type but the options are provided using a provider.  This is not really documented but the following code snippet works for this use-case
+
+```
+from com.xebialabs.xlrelease.api.v1.forms import Variable  
+from import com.xebialabs.xlrelease.domain.variables import ListOfStringValueProviderConfiguration
+
+mylist = ["1","2","3","4"]
+listvar = Variable()
+listvar.value = "1"
+listvar.key = "mylistvar"
+listvar.type = "xlrelease.StringVariable"
+
+
+provider1 = ListOfStringValueProviderConfiguration()
+provider1.id = "myvariableProvider"
+provider1.values = mylist
+listvar.valueProvider = provider1
+releaseApi.createVariable(release.id,listvar )
+```
 
 
 
