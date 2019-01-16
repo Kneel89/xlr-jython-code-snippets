@@ -406,5 +406,15 @@ listvar.valueProvider = provider1
 releaseApi.createVariable(release.id,listvar )
 ```
 
+### Update Owner of a new Release
 
+```
+c = CreateRelease()
+c.setReleaseTitle('Test Release')
+# Create a new release using template ID
+r = templateApi.create('Releaseedf803f0dfc145189d8d38714679e075', c)
+# Providing new owner
+r.owner = 'tester1'
+releaseApi.updateRelease(r)
+```
 
