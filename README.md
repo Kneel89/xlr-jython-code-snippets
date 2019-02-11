@@ -418,3 +418,15 @@ r.owner = 'tester1'
 releaseApi.updateRelease(r)
 ```
 
+### Update a variable in another release
+
+```
+releasetitle = "test1"
+varkey = "local_ip"
+releases = releaseApi.searchReleasesByTitle(releasetitle)
+releaseidvar = releases[0].id
+rvar = releaseApi.getVariables(releaseidvar)
+vartoupdate = [ item for item in rvar if item.key == varkey ] [0]
+vartoupdate.value = "newvalue"
+releaseApi.updateVariable(vartoupdate)
+```
