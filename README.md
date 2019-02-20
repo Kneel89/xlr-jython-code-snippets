@@ -430,3 +430,15 @@ vartoupdate = [ item for item in rvar if item.key == varkey ] [0]
 vartoupdate.value = "newvalue"
 releaseApi.updateVariable(vartoupdate)
 ```
+
+### Generate a markdown table with phase/task/task status into a variable for using in email
+
+```
+out = "|Phase|Task|Status|\n|---|---|---|\n"
+for ph in release.phases:
+    if str(ph.status) != "PLANNED":
+        for tsk in phase.tasks:
+            out= "{0}|{1}|{2}|{3}\n".format(out,ph.title,tsk.title,tsk.status)
+releaseVariables["emailcontent"] = out
+```
+
