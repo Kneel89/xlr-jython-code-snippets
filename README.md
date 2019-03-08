@@ -257,6 +257,30 @@ for item in dataobj:
         
  ```
 
+## Use a template deployment task of any type to generate multiple copies based on a map of component:versions
+
+```
+replaceStrings = ['@@component@@','@@version@@']
+
+for component,version in componentVersions.iteritems():
+  taskToCopy = taskApi.searchTasksByTitle(deployBlock,getCurrentPhase().title,getCurrentRelease().id)[-1]
+
+  for property in taskToCopy.pythonScript.getInputProperties():
+    propertyName = str(property).split('.')[-1]
+    propertyValue = taskToCopy.pythonScript.getProperty(propertyName)
+    print "Property Name is %s and is of type %s \n" % (propertyName,type(propertyValue))
+    if type(propertyValue) is unicode:
+      if any(x in propertyValue for x in replaceStrings):
+        print "Found something to replace \n"
+        taskToCopy.pythonScript.setProperty(propertyName,propertyValue.replace('@@component@@',component).replace('@@version@@',version))
+
+  taskToCopy.title = "Deploying %s at version %s" % (component, version)
+  taskToCopy.precondition = ""
+  createdTask = taskApi.addTask(taskToCopy.container.id, taskToCopy)
+  
+  ```
+  
+
 ## Add a Custom task (MyCustomTask.TestMapOutPut) in curent running Release and set a Key-Value (dicoPackageMap) in output property (MapOut)
 
 ```
