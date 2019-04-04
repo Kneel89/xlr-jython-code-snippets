@@ -1,6 +1,42 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
+### Messing about with attributes (or Facets as they are really known)
+
+```
+import com.xebialabs.xlrelease.api.v1.filter.ApplicationFilters as ApplicationFilters
+
+def get_app_id_from_name(applicationName):
+  """
+  Given a string representing the name of an XL Release Application return the
+  corresponding applicationId
+  :param str applicationName - Name of the XLRelease application
+  In all unhappy cases it will return an empty string -
+  TODO: something better
+  """
+  if applicationName:
+    appList = applicationApi.search(ApplicationFilters(applicationName, None))
+    if appList:
+      return appList[-1].id
+    else:
+      return ""
+  else:
+    return ""
+    
+    
+# For the task in question (myTask in this example)   
+if myTask.facets:
+    #TODO: Loop through facets to find Deployment one!
+    appId = get_app_id_from_name(component)
+    if appId:
+      myTask.facets[0].applicationId = appId
+      myTask.facets[0].version = version
+      
+      
+```
+      
+      
+
 ### Skip the current task (Uses OnFailureHandler (8.1+))
 
 ```
