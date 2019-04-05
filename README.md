@@ -35,7 +35,51 @@ if myTask.facets:
       
 ```
       
-      
+### Creating a task with Facets
+
+```
+import com.xebialabs.xlrelease.api.v1.filter.ApplicationFilters as ApplicationFilters
+import com.xebialabs.xlrelease.api.v1.filter.EnvironmentFilters as EnvironmentFilters
+
+def get_app_id_from_name(applicationName):
+  if applicationName:
+    appList = applicationApi.search(ApplicationFilters(applicationName, None))
+    if appList:
+      return appList[-1].id
+    else:
+      return ""
+  else:
+    return ""
+    
+def get_env_id_from_name(envName, stage):
+  if envName:
+    envList = environmentApi.search(EnvironmentFilters(envName, stage, None))
+    if envList:
+      return envList[-1].id
+    else:
+      return ""
+  else:
+    return ""
+
+containerId = getCurrentTask().container.id
+taskToAdd = taskApi.newTask("xlrelease.ScriptTask")
+taskToAdd.title = "ScriptCreated"
+taskToAdd.script = "import time \ntime.sleep(5)"
+appId = get_app_id_from_name("Wish List")
+
+if appId:
+  deployFacet = facetApi.newFacet("udm.DeploymentTaskFacet")
+  deployFacet.applicationId = appId
+  deployFacet.version = "1.0.0"
+  deployFacet.environmentId = get_env_id_from_name("DEV", "Development")
+  deployFacet.targetId = taskToAdd.id
+  print deployFacet.toString()
+  taskfacets = list()
+  taskfacets.append(deployFacet)
+  taskToAdd.setFacets(taskfacets)
+  
+createdTask=taskApi.addTask(containerId, taskToAdd)
+```
 
 ### Skip the current task (Uses OnFailureHandler (8.1+))
 
