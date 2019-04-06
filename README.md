@@ -341,23 +341,91 @@ for item in dataobj:
 
 ## Use a template deployment task of any type to generate multiple copies based on a map of component:versions
 
+* Create a template with this script task
+* Add a sequential/Parallel Group
+* In group add your template deployment task with same name as templateTask varable below - (currently ScriptTask or any CustomScriptTask (e.g. jenkins) types
+* Add precondition to your template task so it is always skipped (e.g. `result = False`)
+* Add attributes if you want - component and version will be added to the Application (must exsist) and Version fields
+* Remember to set run as user properties
+
 ```
-replaceStrings = ['@@component@@','@@version@@']
+import com.xebialabs.xlrelease.api.v1.filter.ApplicationFilters as ApplicationFilters
 
+componentVersions={'Wish List':'2.0.1','Address Book':'2.1.3','Shopping Cart':'2.0.0'}
+templateTask = "Deploy Me Lots"
+
+
+# Get the template task - limitation here is if phases are named the same
+taskToCopy = taskApi.searchTasksByTitle(templateTask, getCurrentPhase().title, getCurrentRelease().id)[-1]
+#print taskToCopy.getType()
+
+def get_app_id_from_name(applicationName):
+  """
+  Given a string representing the name of an XL Release Application return the
+  corresponding applicationId
+  :param str applicationName - Name of the XLRelease application
+  In all unhappy cases it will return an empty string - 
+  TODO: something better
+  """
+  if applicationName:
+    appList = applicationApi.search(ApplicationFilters(applicationName, None))
+    if appList:
+      return appList[-1].id
+    else:
+      return ""
+  else:
+    return ""
+
+def multi_replace(string, replacements, ignore_case=False):
+    """
+    Given a string and a dict, replaces occurrences of the dict keys found in the 
+    string, with their corresponding values. The replacements will occur in "one pass", 
+    i.e. there should be no clashes.
+    :param str string: string to perform replacements on
+    :param dict replacements: replacement dictionary {str_to_find: str_to_replace_with}
+    :param bool ignore_case: whether to ignore case when looking for matches
+    :rtype: str the replaced string
+    """
+    if ignore_case:
+        replacements = dict((pair[0].lower(), pair[1]) for pair in sorted(replacements.iteritems()))
+    rep_sorted = sorted(replacements, key=lambda s: (len(s), s), reverse=True)
+    rep_escaped = [re.escape(replacement) for replacement in rep_sorted]
+    pattern = re.compile("|".join(rep_escaped), re.I if ignore_case else 0)
+    return pattern.sub(lambda match: replacements[match.group(0).lower() if ignore_case else match.group(0)], string)
+
+# For all the entries in the component version map      
 for component,version in componentVersions.iteritems():
-  taskToCopy = taskApi.searchTasksByTitle(deployBlock,getCurrentPhase().title,getCurrentRelease().id)[-1]
+  # Define replacements for this iteration
+  replacements = {'{{component}}':component,'{{version}}':version}
 
-  for property in taskToCopy.pythonScript.getInputProperties():
-    propertyName = str(property).split('.')[-1]
-    propertyValue = taskToCopy.pythonScript.getProperty(propertyName)
-    print "Property Name is %s and is of type %s \n" % (propertyName,type(propertyValue))
-    if type(propertyValue) is unicode:
-      if any(x in propertyValue for x in replaceStrings):
-        print "Found something to replace \n"
-        taskToCopy.pythonScript.setProperty(propertyName,propertyValue.replace('@@component@@',component).replace('@@version@@',version))
+  if "xlrelease.ScriptTask" in str(taskToCopy.getType()):
+    taskToCopy.script = multi_replace(taskToCopy.script,replacements)
+
+  elif "xlrelease.CustomScriptTask" in str(taskToCopy.getType()):
+    for property in taskToCopy.pythonScript.getInputProperties():
+      propertyName = str(property).split('.')[-1]
+      propertyValue = taskToCopy.pythonScript.getProperty(propertyName)
+
+      if type(propertyValue) is unicode:
+        print "Replacing property`%s` it was [`%s`] \n" % (propertyName,propertyValue)
+        taskToCopy.pythonScript.setProperty(propertyName,multi_replace(propertyValue, replacements))
+  else:
+    #TODO: Investigate other task types
+    print "Unsupported task to copy"
+    exit(1)  
 
   taskToCopy.title = "Deploying %s at version %s" % (component, version)
   taskToCopy.precondition = ""
+  
+  if taskToCopy.facets:
+    #TODO: Loop through facets to find Deployment one!
+    appId = get_app_id_from_name(component)
+    if appId:
+      taskToCopy.facets[0].applicationId = appId
+      taskToCopy.facets[0].version = version
+    else:
+      taskToCopy.precondition="print 'No valid AppName for attributes'\nexit(1)"
+  
   createdTask = taskApi.addTask(taskToCopy.container.id, taskToCopy)
   
   ```
