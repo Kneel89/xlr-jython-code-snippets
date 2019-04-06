@@ -37,6 +37,8 @@ if myTask.facets:
       
 ### Creating a task with Facets
 
+![#f03c15](https://placehold.it/15/f03c15/000000?text=+) *Warning - uses currently undocumented and non-public Api (FacetsApi)*
+
 ```
 import com.xebialabs.xlrelease.api.v1.filter.ApplicationFilters as ApplicationFilters
 import com.xebialabs.xlrelease.api.v1.filter.EnvironmentFilters as EnvironmentFilters
