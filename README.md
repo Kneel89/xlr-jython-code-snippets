@@ -616,3 +616,13 @@ for ph in release.phases:
 releaseVariables["emailcontent"] = out
 ```
 
+
+### Capture a map/dict with key values and print it as a markdown table
+
+```
+out="|Ticket ID|Description|\n|---|---|\n"
+for key, value in releaseVariables["issueList"].iteritems():
+    out= "{0}|{1}|{2}\n".format(out,key,value)
+
+releaseVariables["printedTable"] = out
+```
