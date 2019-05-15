@@ -628,8 +628,8 @@ releaseVariables["printedTable"] = out
 ```
 
 ### Custom task to Add a manual task just after the current running one
-```
 ie, how to find task position and add a new one just after it
+```
 -- synthetic.xml
 
 <type type="dev.addManualAfter"  extends="xlrelease.PythonScript">
@@ -640,7 +640,7 @@ ie, how to find task position and add a new one just after it
 -- dev/addManualAfter.py
 
 def addManual(createTaskName):
-	a = getMyPositionAndContainer(getCurrentTask(),getCurrentPhase(),0)
+	a = getMyPositionAndContainer(getCurrentTask(),getCurrentPhase())
 	mytaskPos = a[0]
 	mycontainer = a[1]
 	taskFound = a[2]
@@ -652,12 +652,13 @@ def addManual(createTaskName):
 		raise Exception("**Exception: Task [{0}] not found in [{1}]**".format(getCurrentTask().title,getCurrentPhase().title))
 
 
-def getMyPositionAndContainer(mytask,mycontainer,i):
+def getMyPositionAndContainer(mytask,mycontainer):
 	isfound = False
+	i = 0
 	for item in mycontainer.tasks:
 		#print "[%s/%s]" %(str(item.type),item.title)
 		if str(item.type) == "xlrelease.SequentialGroup":
-			res = getMyPositionAndContainer(mytask,item,0)
+			res = getMyPositionAndContainer(mytask,item)
 			i = res[0]
 			mycontainer = res[1]
 			isfound = res[2]
