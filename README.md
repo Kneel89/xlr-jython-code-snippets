@@ -628,7 +628,8 @@ releaseVariables["printedTable"] = out
 ```
 
 ### Custom task to Add a manual task just after the current running one
-#ie, how to find task position and add a new one just after it
+```
+ie, how to find task position and add a new one just after it
 -- synthetic.xml
 
 <type type="dev.addManualAfter"  extends="xlrelease.PythonScript">
@@ -672,7 +673,7 @@ def getMyPositionAndContainer(mytask,mycontainer,i):
 	return [i,mycontainer,isfound]
 	
 addManual("AutoCreated")
-
+```
 
 
 
