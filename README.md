@@ -626,3 +626,53 @@ for key, value in releaseVariables["issueList"].iteritems():
 
 releaseVariables["printedTable"] = out
 ```
+
+### Custom task to Add a manual task just after the current running one
+### ie, how to find task position and add a new one just after it
+-- synthetic.xml
+
+<type type="dev.addManualAfter"  extends="xlrelease.PythonScript">
+	<property name="scriptLocation" default="dev/addManualAfter.py" hidden="true" />
+	<property name="taskColor" hidden="true" default="#009CDB"/>
+</type>
+
+-- dev/addManualAfter.py
+
+def addManual(createTaskName):
+	a = getMyPositionAndContainer(getCurrentTask(),getCurrentPhase(),0)
+	mytaskPos = a[0]
+	mycontainer = a[1]
+	taskFound = a[2]
+	if taskFound:
+		task = taskApi.newTask("xlrelease.Task")
+		task.title = str(createTaskName)
+		phaseApi.addTask(mycontainer.id,task,mytaskPos+1)
+	else:
+		raise Exception("**Exception: Task [{0}] not found in [{1}]**".format(getCurrentTask(),getCurrentPhase()))
+
+
+def getMyPositionAndContainer(mytask,mycontainer,i):
+	isfound = False
+	for item in mycontainer.tasks:
+		#print "[%s/%s]" %(str(item.type),item.title)
+		if str(item.type) == "xlrelease.SequentialGroup":
+			res = getMyPositionAndContainer(mytask,item,0)
+			i = res[0]
+			mycontainer = res[1]
+			isfound = res[2]
+		else:
+			if item.id == mytask.id:
+				isfound = True
+				break
+		if isfound == True:
+			break
+		
+		i = i + 1
+
+	return [i,mycontainer,isfound]
+	
+addManual("AutoCreated")
+
+
+
+
