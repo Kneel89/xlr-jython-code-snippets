@@ -649,7 +649,7 @@ def addManual(createTaskName):
 		task.title = str(createTaskName)
 		phaseApi.addTask(mycontainer.id,task,mytaskPos+1)
 	else:
-		raise Exception("**Exception: Task [{0}] not found in [{1}]**".format(getCurrentTask(),getCurrentPhase()))
+		raise Exception("**Exception: Task [{0}] not found in [{1}]**".format(getCurrentTask().title,getCurrentPhase().title))
 
 
 def getMyPositionAndContainer(mytask,mycontainer,i):
