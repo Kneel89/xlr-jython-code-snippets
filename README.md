@@ -564,7 +564,7 @@ These are slightly different, the variable itself can be a **StringVariable** ty
 
 ```
 from com.xebialabs.xlrelease.api.v1.forms import Variable  
-from import com.xebialabs.xlrelease.domain.variables import ListOfStringValueProviderConfiguration
+from com.xebialabs.xlrelease.domain.variables import ListOfStringValueProviderConfiguration
 
 mylist = ["1","2","3","4"]
 listvar = Variable()
