@@ -1,6 +1,16 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
+### Search for a release in Release Group
+
+```
+rgfilter = ReleaseGroupFilters()
+rgfilter.withTitle(groupName)
+rgfilter.statuses = [ ReleaseGroupStatus.FAILED, ReleaseGroupStatus.IN_PROGRESS, ReleaseGroupStatus.PAUSED,ReleaseGroupStatus.FAILING  ]
+rg = releaseGroupApi.resource.searchGroups(rgfilter, 0, 10, ReleaseGroupOrderMode.RISK)
+```
+
+
 ### Create a Release Group Dynamically and add the current release
 
 ```
