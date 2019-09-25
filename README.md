@@ -4,6 +4,10 @@ XLR code snippets using python and jython API
 ### Search for a release in Release Group
 
 ```
+from com.xebialabs.xlrelease.domain.group import ReleaseGroup
+from com.xebialabs.xlrelease.api.v1.forms import ReleaseGroupFilters
+from com.xebialabs.xlrelease.api.v1.forms import ReleaseGroupOrderMode 
+from com.xebialabs.xlrelease.domain.group import ReleaseGroupStatus
 rgfilter = ReleaseGroupFilters()
 rgfilter.withTitle(groupName)
 rgfilter.statuses = [ ReleaseGroupStatus.FAILED, ReleaseGroupStatus.IN_PROGRESS, ReleaseGroupStatus.PAUSED,ReleaseGroupStatus.FAILING  ]
@@ -15,6 +19,9 @@ rg = releaseGroupApi.resource.searchGroups(rgfilter, 0, 10, ReleaseGroupOrderMod
 
 ```
 from com.xebialabs.xlrelease.domain.group import ReleaseGroup
+from com.xebialabs.xlrelease.api.v1.forms import ReleaseGroupFilters
+from com.xebialabs.xlrelease.api.v1.forms import ReleaseGroupOrderMode 
+from com.xebialabs.xlrelease.domain.group import ReleaseGroupStatus
 
 from java.util import Calendar, Date
 cal = Calendar.getInstance()
