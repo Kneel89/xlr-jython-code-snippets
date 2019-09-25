@@ -26,8 +26,6 @@ from com.xebialabs.xlrelease.domain.group import ReleaseGroupStatus
 from java.util import Calendar, Date
 cal = Calendar.getInstance()
 cal.setTime(Date())
-#cal.add(Calendar.DAY_OF_WEEK, 7)
-print cal.getTime()
 
 r = ReleaseGroup()
 r.title = "myReleaseGroup"
