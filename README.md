@@ -1,6 +1,29 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
+### Create a Release Group Dynamically and add the current release
+
+```
+from com.xebialabs.xlrelease.domain.group import ReleaseGroup
+
+from java.util import Calendar, Date
+cal = Calendar.getInstance()
+cal.setTime(Date())
+#cal.add(Calendar.DAY_OF_WEEK, 7)
+print cal.getTime()
+
+r = ReleaseGroup()
+r.title = "myReleaseGroup"
+r.folderId = "Applications/FolderSamplesAndTutorials"
+r.startDate = cal.getTime()
+cal.add(Calendar.DAY_OF_WEEK, 7)
+r.endDate = cal.getTime()
+releaseGroupApi.resource.createGroup(r)
+
+releaseGroupApi.resource.addMembersToGroup(r.id,[release.id])
+```
+
+
 ### Messing about with attributes (or Facets as they are really known)
 
 ```
