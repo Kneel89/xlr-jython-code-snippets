@@ -1,6 +1,21 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
+### Dynamically choose a target server for all tasks of that type in a release
+```
+# The variable servicenow_instance can be presented to the user as a listbox choice type during the start of release
+# Then using a bootstrap jython task in the start of the release, User's selection can be dynamically applied to all service
+# now tasks so they all point to the chosen server endpoing
+
+servicenow_servers = configurationApi.searchByTypeAndTitle("servicenow.Server", releaseVariables['servicenow_instance'])
+for p in release.phases:
+    for t in p.tasks:
+        if str(t.getTaskType()).split('.')[0] == 'servicenow':
+            temp_task = taskApi.getTask(t.id)
+            temp_task.pythonScript.setProperty("servicenowServer",servicenow_servers[0])
+            taskApi.updateTask(temp_task.id, temp_task)
+```
+
 ### Search for a release in Release Group
 
 ```
