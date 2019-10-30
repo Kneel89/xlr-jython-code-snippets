@@ -729,5 +729,84 @@ def getMyPositionAndContainer(mytask,mycontainer):
 addManual("AutoCreated")
 ```
 
+### Dynamically Generate Deployment Task based on json Data
+```
+import json
+teamProjectName = "MyProject"
+buildDefinitionName = "mybuildDef"
+datamap = '''[
+	{
+		"name": "libs",
+		"entries": [
+			{
+				"name": "a-library",
+				"skip": "false"
+			},
+			{
+				"name": "b-library",
+				"skip": "false"
+			},
+			{
+				"name": "c-library",
+				"skip": "true"
+			}
+		],
+		"execution": "sequence"
+	},
+	{
+		"name": "messages",
+		"entries": [
+			{
+				"name": "a-messages",
+				"skip": "false"
+			},
+			{
+				"name": "b-messages",
+				"skip": "true"
+			},
+			{
+				"name": "c-messages",
+				"skip": "false"
+			}
+		],
+		"execution": "parallel"
+	},
+	{
+		"name": "services",
+		"entries": [
+			{
+				"name": "a-service",
+				"skip": "false"
+			},
+			{
+				"name": "b-service",
+				"skip": "false"
+			}
+		],
+		"execution": "parallel"
+	}
+]
+'''
+dataobj = json.loads(datamap)
+
+for item in dataobj:
+    phase = phaseApi.newPhase(item['name'])
+    phase = phaseApi.addPhase(release.id, phase)
+    if str(item['execution']) == "parallel":
+        pgrouptask = taskApi.newTask("xlrelease.ParallelGroup")
+        pgrouptask.title = "Parallel Run"
+        phase = taskApi.addTask(phase.id, pgrouptask)
+    for entry in item['entries']:
+        task = taskApi.newTask("xldeploy.Deploy")
+        task.title = entry['name']
+
+        task.pythonScript.setProperty("deploymentEnvironment", entry['name'])
+        task.pythonScript.setProperty("deploymentPackage", "app-%s" % entry['name'])
+        
+        if entry['skip'] == "true":
+            task.precondition = "True == False"
+        taskApi.addTask(phase.id, task)
+```
+
 
 
