@@ -808,5 +808,15 @@ for item in dataobj:
         taskApi.addTask(phase.id, task)
 ```
 
+### Dynamically update the Variable Value for a Create Release Task in a release
+
+```
+for t in phase.tasks:
+    if str(t.getTaskType()).split('.')[1] == 'CreateReleaseTask':
+        for template_var in t.templateVariables:
+            if template_var.key == 'dpackage':
+                template_var.value = 'oclc'
+                taskApi.updateTask(t.id, t)
+```
 
 
