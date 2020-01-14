@@ -1,6 +1,32 @@
 # xlr-jython-code-snippets
 XLR code snippets using python and jython API
 
+
+### Create a new Stage and add it to a new Environment
+```
+from com.xebialabs.xlrelease.domain.environments import EnvironmentStage, Environment
+from com.xebialabs.xlrelease.api.v1.filter import EnvironmentStageFilters
+
+# Create a new stage and create it
+stage = EnvironmentStage()
+stage.setTitle("MyStage")
+environmentStageApi.create(stage)
+
+# Create a new filter to find the stage we just created with its real ID
+
+filter = EnvironmentStageFilters("MyStage")
+stageList = environmentStageApi.search(filter)
+
+if stageList:
+    # Set the stage in the enviroment and create it
+    envir = Environment()
+    envir.setTitle("MyEnvironment")
+    envir.setStage(stageList[0]._delegate)
+    environmentApi.create(envir)
+
+```
+
+
 ### Dynamically choose a target server for all tasks of that type in a release
 ```
 # The variable servicenow_instance can be presented to the user as a listbox choice type during the start of release
