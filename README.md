@@ -2,6 +2,37 @@
 XLR code snippets using python and jython API
 
 
+# Use custom python modules in XL Release
+### Sample Using git module.
+1. Download the library code https://files.pythonhosted.org/packages/d2/e8/0bd80cc9e1422f5449d663479459c3c032ff7acaf6609a63324d23bde9ac/GitPython-3.0.5.tar.gz
+
+2. untar/unzip and take out the actual module folder from it. In the above case, its the git folder.
+3. Now go under `XLR_HOME/lib` folder
+4. Create a new folder called `Lib` ( case sensitive )
+5. Copy the git module folder under Lib. Will look like this `XLR_HOME/lib/Lib/git`
+6. Find the jython standalone jar name by doing a file search `ls jython*`.  
+7.  Now run this command to update the jython jar with the contents of the Lib folder 
+` jar -uvf jython-standalone-2.7.1.patch2618.jar Lib`
+
+if would give an output like this while it adds the git python module 
+
+` adding: Lib/(in = 0) (out= 0)(stored 0%)  
+adding: Lib/git/(in = 0) (out= 0)(stored 0%)   
+adding: Lib/git/db.py(in = 1963) (out= 802)(deflated 59%)
+adding: Lib/git/cmd.py(in = 42869) (out= 12482)(deflated 70%)
+adding: Lib/git/config.py(in = 28415) (out= 8096)(deflated 71%)
+adding: Lib/git/compat.py(in = 9436) (out= 3080)(deflated 67%)
+adding: Lib/git/test/(in = 0) (out= 0)(stored 0%)
+adding: Lib/git/test/test_stats.py(in = 971) (out= 412)(deflated 57%)`
+
+8. Restart XLR and you should be able to use git module in jython script task.
+
+The same can be done with XLD and then using it in plugins.
+
+**Important**:  If you want to use a python library under a custom plugin script inside XLRelease, instead of copying to lib/Lib and bundling up,  you can bundle up the module inside the plugin jar at the root level.  If you are working under ext folder, then you may keep the module under there while using it in the custom scripts backing the custom tasks.
+**Disclaimer** : Another important thing to keep in mind is that on upgrades, you will have to manually update the jython library in that version with these modules.
+
+
 ### Create a new Stage and add it to a new Environment
 ```
 from com.xebialabs.xlrelease.domain.environments import EnvironmentStage, Environment
