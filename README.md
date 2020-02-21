@@ -2,8 +2,34 @@
 XLR code snippets using python and jython API
 
 
-# Use custom python modules in XL Release
-### Sample Using git module.
+### Refer to passwords in xl-release-server.conf in jython
+#### Setup 
+In release-server.conf, provide this
+```
+my.password=somepassword
+```
+
+On restart of the server, this is encrypted (and will be something like
+```
+my.password={aes\:v0}vEWwVYoSXqKXW+1Zro5u4KwFiMfsQJ0TJBeTsmtXgv8\=
+```
+
+#### Refer to password in plugin/custom jython script
+```
+from com.xebialabs.xlrelease.config import XlrConfig
+from com.xebialabs.deployit.util import PasswordEncrypter
+
+#To retrieve the encrypted password:
+myTemp = XlrConfig.getInstance().getConfig(“my.password”);
+ 
+#To convert to plain text:
+myClearPassword = PasswordEncrypter.getInstance().decrypt(myTemp);
+
+```
+
+
+### Use custom python modules in XL Release
+#### Sample Using git module.
 1. Download the library code https://files.pythonhosted.org/packages/d2/e8/0bd80cc9e1422f5449d663479459c3c032ff7acaf6609a63324d23bde9ac/GitPython-3.0.5.tar.gz
 
 2. untar/unzip and take out the actual module folder from it. In the above case, its the git folder.
