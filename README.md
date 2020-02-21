@@ -14,17 +14,15 @@ On restart of the server, this is encrypted (and will be something like
 my.password={aes\:v0}vEWwVYoSXqKXW+1Zro5u4KwFiMfsQJ0TJBeTsmtXgv8\=
 ```
 
-#### Refer to password in plugin/custom jython script
+#### Refer to password in plugin/custom jython script (tested in XLR 9.5.2 )
 ```
 from com.xebialabs.xlrelease.config import XlrConfig
-from com.xebialabs.deployit.util import PasswordEncrypter
 
-#To retrieve the encrypted password:
-myTemp = XlrConfig.getInstance().getConfig(“my.password”);
+
+#To retrieve the decrypted password:
+myTemp = XlrConfig.getInstance().getRootConfig()
+print myTemp.getString("my.password")
  
-#To convert to plain text:
-myClearPassword = PasswordEncrypter.getInstance().decrypt(myTemp);
-
 ```
 
 
