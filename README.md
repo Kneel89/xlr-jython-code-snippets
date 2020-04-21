@@ -2,6 +2,17 @@
 XLR code snippets using python and jython API
 
 
+### Decode passwords
+
+```
+from com.xebialabs.deployit.util import PasswordEncrypter
+myCi = repositoryService.read(thisCi.id)
+print myCi.password
+clearPassword = PasswordEncrypter.getInstance().decrypt(myCi.password)
+print clearPassword
+```
+
+
 ### Refer to passwords in xl-release-server.conf in jython
 #### Setup 
 In release-server.conf, provide this
