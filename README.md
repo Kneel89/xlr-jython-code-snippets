@@ -2,6 +2,19 @@
 XLR code snippets using python and jython API
 
 
+### Lookup all task types in XLR
+
+```
+from com.xebialabs.deployit.plugin.api.reflect import Type
+from com.xebialabs.deployit.plugin.api.reflect.DescriptorRegistry import getDescriptorRegistry
+taskDesc = Type.valueOf("xlrelease.Task")
+registry = getDescriptorRegistry(taskDesc.getTypeSource())
+print("%s\n"%registry)
+descriptors = registry.getDescriptors()
+tasks = [d.getType() for d in descriptors if d.isVirtual() == False and (d.isAssignableTo(Type.valueOf("xlrelease.Task")) or d.isAssignableTo(Type.valueOf("xlrelease.PythonScript")))]
+print("tasks: %s\n" % tasks)
+```
+
 ### Decode passwords
 
 ```
