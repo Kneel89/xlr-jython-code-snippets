@@ -924,4 +924,55 @@ for t in phase.tasks:
                 taskApi.updateTask(t.id, t)
 ```
 
+### Get a list of links for Releases or Templates having a specific task type:
+(code valid for un custom plugin with a <TaskType> string property)
+```
 
+from com.xebialabs.deployit.plugin.api.reflect import Type
+from com.xebialabs.deployit.plugin.api.reflect.DescriptorRegistry import getDescriptorRegistry
+taskDesc = Type.valueOf("xlrelease.Task")
+registry = getDescriptorRegistry(taskDesc.getTypeSource())
+descriptors = registry.getDescriptors()
+tasks = [d.getType() for d in descriptors if d.isVirtual() == False and (d.isAssignableTo(Type.valueOf("xlrelease.Task")) or d.isAssignableTo(Type.valueOf("xlrelease.PythonScript")))]
+print("tasks: %s\n" % tasks)
+
+
+TaskType="XlrTasks.TaskType"
+
+
+#Returns the list of planned or active releases that are visible to the current user
+print "**Running or planned visible releases - Task type [%s]**"%(TaskType)
+page=0
+allRunningReleases=releaseApi.getReleases(page,100,1)
+while len(allRunningReleases) > 0:
+	for r in allRunningReleases:
+		cnt=0
+		for p in r.phases:
+			for t in p.tasks:
+				if str(t.getTaskType()) == TaskType:
+					cnt=cnt+1
+		if cnt>0:
+			print ("%s : %s")%(r.url,cnt)
+	page=page+1
+	allRunningReleases=releaseApi.getReleases(page,100,1)
+
+
+#Returns the list of templates that are visible to the current user.
+print ""
+print "**Visible templates - Task type [%s]**"%(TaskType)
+page=0
+allTemplates=templateApi.getTemplates("",[],page,100,1)
+while len(allTemplates) > 0:
+	for r in allTemplates:
+		cnt=0
+		for p in r.phases:
+			for t in p.tasks:
+				if str(t.getTaskType()) == TaskType:
+					cnt=cnt+1
+		if cnt>0:
+			print ("%s : %s")%(r.url,cnt)
+	page=page+1
+	allTemplates=templateApi.getTemplates("",[],page,100,1)
+
+
+```
