@@ -925,7 +925,7 @@ for t in phase.tasks:
 ```
 
 ### Get a list of links for Releases or Templates having a specific task type:
-(code valid for un custom plugin with a <TaskType> string property)
+(code valid for un custom task with a "TaskType" string property)
 ```
 
 from com.xebialabs.deployit.plugin.api.reflect import Type
