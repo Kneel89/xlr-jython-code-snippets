@@ -2,6 +2,14 @@
 XLR code snippets using python and jython API
 
 
+### Configure reference to Certificates for access by Python Libraries in plugins
+There are third party python libraries that often refer to a certificate using certifi for connecting to secured URLs. If the cert is self-signed, you might need to make it available to the python lib.
+1. put the cert in a cert.pem file or append it to a cacerts.pem file
+2. Store the file in a referenable location from XL Server
+3. Create an environment variable inside run.sh/run.cmd referring to cert path.   
+eg. ```export REQUESTS_CA_BUNDLE=$XLD_HOME/certs/cert.pem.  ```
+4. Restart the server.
+
 ### Lookup all task types in XLR
 
 ```
